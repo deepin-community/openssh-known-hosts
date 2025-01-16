@@ -1,0 +1,23 @@
+#!/bin/sh
+
+# psql plugin
+#
+# uses psql to download a TABLE (or VIEW) of the form:
+# CREATE TABLE known_hosts (
+#	namelist	text, # comma separated
+#	type		text,
+#	key		text
+# );
+# alternatively only one column with spaces between those three
+#
+# ENVIRONMENT VARIABLES:
+#	TABLE		table to download
+# used by psql:
+#	PG*		see psql(1)
+#
+
+set -e
+
+psql -F ' ' -Atc "SELECT * FROM ${TABLE}" > new
+
+# vim:set ft=sh:
