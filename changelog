@@ -1,0 +1,226 @@
+commit 274f3a6fca8d003140eed1fdd6bf70e016403bad
+Author: Timo Weingärtner <timo@tiwe.de>
+Date:   2024-10-24 10:55:42 +0200
+
+    remove examples/kit_edu, service gone
+
+commit b29ad4a5696aa1cbf85b77ae64c99865e57d2d6b
+Author: Guillem Jover <guillem@hadrons.org>
+Date:   2024-09-30 01:39:13 +0200
+
+    Add sopv support
+    
+    This is a subset of the Stateless OpenPGP CLI
+    <https://datatracker.ietf.org/doc/draft-dkg-openpgp-stateless-cli/>,
+    that can easily replace the GnuPG usage.
+    
+    There are multiple implementations providing this interface.
+
+commit 31b9dc01eb871055de006a3fb94fdaea2059966a
+Author: Guillem Jover <guillem@hadrons.org>
+Date:   2024-10-02 03:32:13 +0200
+
+    Clarify comment on exit code override to workaround overlapping codes
+    
+    The framework expects to be able to ignore specific exit codes from the
+    plugins, but if we are possibly returning exit codes from different
+    tools, then it's hard to untangle what tool generated which exit code.
+    
+    In the plugins at hand the exit code 1 seems like a safe one, given both
+    curl and rsync usage, so we currently turn any OpenPGP verification
+    error into that.
+
+commit c26168119320ca5b03e6b420e3c4192d1e2ecc6a
+Author: Guillem Jover <guillem@hadrons.org>
+Date:   2024-09-30 02:00:58 +0200
+
+    Current gpgv requires the datafile for detached signatures
+    
+    Otherwise we get the following error:
+    
+      gpgv: no signed data
+      gpgv: can't hash datafile: No data
+
+commit a18b87e43ece9a448ab912225e1a26d8fd4b3e7f
+Author: Guillem Jover <guillem@hadrons.org>
+Date:   2024-09-30 01:36:22 +0200
+
+    Use OpenPGP when referring to the standard or objects
+    
+    These are OpenPGP signatures that any conforming implementation should
+    be able to handle. They are not specific to GnuPG, which is one of many
+    implementations, even though a very prominent one.
+
+commit f855dc5ac98432ef4b126446c50a9737d98f0fb8
+Author: Timo Weingärtner <timo@tiwe.de>
+Date:   2021-07-19 13:36:58 +0200
+
+    always use read with -r
+
+commit 53614d19826293d753aad599f2b2900d8d6303ed
+Author: Timo Weingärtner <timo@tiwe.de>
+Date:   2021-07-19 13:35:16 +0200
+
+    factor out download_source()
+
+commit 265011411069c0c26dd693f714a43a6c7e6ad9ea
+Author: Timo Weingärtner <timo@tiwe.de>
+Date:   2021-07-19 13:33:32 +0200
+
+    use bash arrays in path_search()
+
+commit 0b161b76dac289f4b7100916bac27961aed88120
+Author: Timo Weingärtner <timo@tiwe.de>
+Date:   2021-07-19 13:24:53 +0200
+
+    make config variables readonly
+
+commit 4a715d24969a351ddd255fccee9dfd7e726d2555
+Author: Timo Weingärtner <timo@tiwe.de>
+Date:   2016-05-25 12:36:29 +0200
+
+    plugins/psql: fix spelling in comment
+
+commit 5759da2f6316fccc56d722e06d6e4bdda26251be (tag: 0.6.2)
+Author: Timo Weingärtner <timo@tiwe.de>
+Date:   2015-02-17 19:50:11 +0100
+
+    changelog for 0.6.2
+
+commit 43b1b4cbfb1aeabf3c9542c27c971790bf77cf91
+Author: Timo Weingärtner <timo@tiwe.de>
+Date:   2015-02-17 19:39:41 +0100
+
+    apply shellcheck to update-openssh-known-hosts
+    
+    applied with care, the two remaining things are meant that way
+
+commit 0e971e742afad1669dbae0d75eead51e76af1899
+Author: Timo Weingärtner <timo@tiwe.de>
+Date:   2015-01-22 20:34:42 +0100
+
+    plugins/curl: fix silent wrong output on HTTP 404
+
+commit 4a043c6de09658a97dff8ec2d7b311c4f4bce3af
+Author: Timo Weingärtner <timo@tiwe.de>
+Date:   2014-03-04 17:18:25 +0100
+
+    add some real-life examples
+    
+    kit_edu has connect-timeout because firewall DROPs connections from outside
+
+commit a1ccb1e836177276c23851fc015ec5c7ebf9f362 (tag: 0.6.1)
+Author: Timo Weingärtner <timo@tiwe.de>
+Date:   2014-02-18 18:39:44 +0100
+
+    changelog for 0.6.1
+
+commit f8b47031fd65b9055e6a89a961466bdb367cd710
+Author: Timo Weingärtner <timo@tiwe.de>
+Date:   2014-02-18 18:25:08 +0100
+
+    Documentation update, license clarification
+    
+    use pandoc for manpage generation, drop now-redundant README
+
+commit c4c47613070b81b95434b03b6cda74daa76aada6
+Author: Timo Weingärtner <timo@tiwe.de>
+Date:   2014-02-05 15:15:11 +0100
+
+    make main script configurable via environment
+
+commit 17e1ec141ebea9c949dd5bc1933c9a1e057d5a16
+Author: Timo Weingärtner <timo@tiwe.de>
+Date:   2013-01-23 17:59:46 +0100
+
+    document alternate URL syntaxes and how to use ssh-based transfer with an identity
+
+commit 1e1e7fecbd162d7e763fd553994ba90298101659
+Author: Timo Weingärtner <timo@tiwe.de>
+Date:   2013-01-12 19:35:28 +0100
+
+    use #!/bin/sh, any POSIX sh is ok.
+    
+    Thanks: Philipp Kern <pkern@debian.org>
+
+commit 1b05237ebb0ef83d2b0603369347da9832711c82 (tag: 0.6)
+Author: Timo Weingärtner <timo@tiwe.de>
+Date:   2013-01-07 17:31:27 +0100
+
+    implement caching for filtered version
+    
+    filtering can take a long time, about 1m for 20k key entries
+
+commit 8d177fb1f42cb80ffbf678669cd726d40f26f123
+Author: Timo Weingärtner <timo@tiwe.de>
+Date:   2013-01-04 21:16:37 +0100
+
+    implement hostname filtering
+    
+    Fixes GH-1.
+
+commit b976b61bd47d0a404d94e390c429ac5e336b261a
+Author: Timo Weingärtner <timo@tiwe.de>
+Date:   2013-01-04 21:12:09 +0100
+
+    bash style fixups
+    
+    * [[ for less quoting
+    * -eq instead of = for numerical equality
+    * text manipulation instead of forking a basename(1)
+
+commit 15f2c2977ee6e95893e3fb4859bdf73dd6885e8a
+Author: Timo Weingärtner <timo@tiwe.de>
+Date:   2013-01-04 20:06:59 +0100
+
+    prefer local plugins over ones from a distro package
+
+commit a8e7c707a3e85cfcbdf2706634e8fc07dd9b3f54
+Author: Timo Weingärtner <timo@tiwe.de>
+Date:   2012-11-03 17:43:58 +0100
+
+    update pgsql plugin documentation
+    
+    + add SSL verification options
+    + replace PGCLUSTER with PGHOST, former cements the use of a specific
+      version of postgresql-client.
+    
+    Git-Dch: Full
+
+commit 9817011424d5a37501ffb6bcee573e6fb25b852d
+Author: Timo Weingärtner <timo@tiwe.de>
+Date:   2012-03-26 21:36:41 +0200
+
+    drop debian/
+    
+    debian packaging will be on separate branch now
+
+commit a2060472fe74355a4b772ca0efd28249702a7025 (tag: debian/0.5)
+Author: Timo Weingärtner <timo@tiwe.de>
+Date:   2012-02-25 21:17:06 +0100
+
+    Imported Debian version 0.5
+
+commit e5b99e36d96614d059137f3df323bcc39ead369e (tag: debian/0.4)
+Author: Timo Weingärtner <timo@tiwe.de>
+Date:   2012-02-25 21:17:04 +0100
+
+    Imported Debian version 0.4
+
+commit 550c2f513a05899566ca90a1e859218ee44a8ac7 (tag: debian/0.3)
+Author: Timo Weingärtner <timo@tiwe.de>
+Date:   2012-02-25 21:17:02 +0100
+
+    Imported Debian version 0.3
+
+commit 4b444020fa50e4f22a427b981c582b35cdb4efb1 (tag: debian/0.2)
+Author: Timo Weingärtner <timo@tiwe.de>
+Date:   2012-02-25 21:17:00 +0100
+
+    Imported Debian version 0.2
+
+commit 8f32f842b33bdc6617b41dc9f18b222fd3013e21 (tag: debian/0.1)
+Author: Timo Weingärtner <timo@tiwe.de>
+Date:   2012-02-25 21:08:57 +0100
+
+    Imported Debian version 0.1

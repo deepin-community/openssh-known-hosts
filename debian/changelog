@@ -1,0 +1,93 @@
+openssh-known-hosts (0.6.3-1) unstable; urgency=medium
+
+  * New upstream version with sopv support by Guillem Jover.
+  * update upstream urls
+  * adapt to current packaging standards
+
+ -- Timo Weingärtner <timo@tiwe.de>  Thu, 24 Oct 2024 11:38:48 +0200
+
+openssh-known-hosts (0.6.2-1) unstable; urgency=medium
+
+  * New upstream version
+  * fix invalid-short-name-in-dep5-copyright lintian warning
+  * Bump Standards-Version
+
+ -- Timo Weingärtner <timo@tiwe.de>  Tue, 17 Feb 2015 19:56:53 +0100
+
+openssh-known-hosts (0.6.1-3) unstable; urgency=medium
+
+  * postrm: only act on purge, don't fail when empty
+
+ -- Timo Weingärtner <timo@tiwe.de>  Mon, 10 Mar 2014 20:53:11 +0100
+
+openssh-known-hosts (0.6.1-2) unstable; urgency=medium
+
+  * postinst: check for dangling but possibly correct symlink
+  * Upload to unstable (Closes: #534891)
+
+ -- Timo Weingärtner <timo@tiwe.de>  Wed, 26 Feb 2014 17:22:27 +0100
+
+openssh-known-hosts (0.6.1-1) unstable; urgency=medium
+
+  * Avoid German-isms in Description:
+    Thanks to Philipp Kern <pkern@debian.org>
+  * add random sleep to cron.d file to reduce DDoS effects on servers
+  * New upstream version
+  * rely on dh_usrlocal
+  * Bump Standards Version to 3.9.5.
+  * debian/watch: use github directly
+
+ -- Timo Weingärtner <timo@tiwe.de>  Wed, 19 Feb 2014 12:34:07 +0100
+
+openssh-known-hosts (0.6-1) unstable; urgency=low
+
+  * New upstream version with hostname filtering.
+  * Bump Standards Version to 3.9.4.
+  * Drop dash Depends: (dash is essential)
+  * use copyright-format 1.0
+  * add watch file
+  * add Homepage: and Vcs-*: fields
+  * update maintainerscripts:
+    + add postrm to clean up cache and lib dirs
+    + no longer remove stuff on upgrades in prerm
+
+ -- Timo Weingärtner <timo@tiwe.de>  Thu, 10 Jan 2013 15:11:58 +0100
+
+openssh-known-hosts (0.5) fsmi-squeeze; urgency=low
+
+  * Fix fd redirection (Errors went into ssh_known_hosts).
+
+ -- Timo Weingärtner <timo@tiwe.de>  Sat, 10 Jul 2010 18:51:56 +0200
+
+openssh-known-hosts (0.4) fsmi-squeeze; urgency=low
+
+  * Don't update ssh_known_hosts if nothing changed.
+  * Plugin curl: Allow passing of CURL_OPTIONS.
+  * Update copyright years.
+  * Bump Standards-Version to 3.9.0.
+
+ -- Timo Weingärtner <timo@tiwe.de>  Sat, 10 Jul 2010 02:11:40 +0200
+
+openssh-known-hosts (0.3) fsmi-squeeze; urgency=low
+
+  * Bump Standards-Version to 3.8.4, no changes needed.
+  * Use dh in debian/rules.
+  * Remove /usr/local/share/openssh-known-hosts in prerm.
+  * Add debian/source/format.
+  * Quote umlauts in manpage.
+
+ -- Timo Weingärtner <timo@tiwe.de>  Wed, 28 Apr 2010 17:06:32 +0200
+
+openssh-known-hosts (0.2) unstable; urgency=low
+
+  * Add examples.
+  * Add optional GnuPG verification in curl and rsync plugins.
+  * Rename update-known-hosts to update-$package and install it in /usr/sbin.
+
+ -- Timo Weingärtner <timo@tiwe.de>  Sun, 28 Jun 2009 01:57:44 +0200
+
+openssh-known-hosts (0.1) fsmi-lenny; urgency=low
+
+  * Initial Release.
+
+ -- Timo Weingärtner <timo@tiwe.de>  Wed, 24 Jun 2009 19:19:10 +0200

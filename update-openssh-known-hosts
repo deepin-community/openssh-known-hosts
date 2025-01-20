@@ -1,0 +1,155 @@
+#!/bin/bash
+
+# Copyright (C) 2009-2014 Timo Weingärtner <timo@tiwe.de>
+#
+# This file is part of openssh-known-hosts.
+#
+# openssh-known-hosts is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# openssh-known-hosts is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with openssh-known-hosts. If not, see <http://www.gnu.org/licenses/>.
+
+set -euC
+
+CONFDIR=${CONFDIR:-/etc/openssh-known-hosts}
+PLUGIN_PATH=${PLUGIN_PATH:-/usr/local/share/openssh-known-hosts/plugins:/usr/share/openssh-known-hosts/plugins}
+CACHEDIR=${CACHEDIR:-/var/cache/openssh-known-hosts}
+LOCK=${LOCK:-/var/lock/openssh-known-hosts}
+OUTFILE=${OUTFILE:-/var/lib/openssh-known-hosts/ssh_known_hosts}
+
+readonly CONFDIR PLUGIN_PATH CACHEDIR LOCK OUTFILE
+
+path_search () {
+	local search=$1
+	local -a pathlist
+	IFS=: read -ra pathlist <<< "$2"
+
+	if [[ ${search} =~ / ]]; then
+		echo "${search}"
+		return 0
+	fi
+	for path in "${pathlist[@]}"; do
+		if [ -f "${path}/${search}" ]; then
+			echo "${path}/${search}"
+			return 0
+		fi
+	done
+	echo "'${search}' not found in '$2'!" >&2
+	exit 127
+}
+
+cleanup () {
+	rm -f "${OUTFILE}.new"
+	kill "${LOCKPID}"
+	lockfile-remove "${LOCK}"
+}
+
+download_source () (
+	local sourcename=$1
+	local sourcefile=$2
+
+	cd "${CACHEDIR}/${sourcename}"
+	set -a
+	. "${sourcefile}"
+	set +a
+	# shellcheck disable=SC2091
+	$(path_search "$PLUGIN" "$PLUGIN_PATH") >| log 2>&1 || {
+		exitcode=$?
+		rm -f new
+		ignore=''
+		for e in ${EXIT_IGNORE:-0}; do
+			if [[ $e = "$exitcode" ]]; then
+				ignore=1
+				break
+			fi
+		done
+		if [ -z "$ignore" ] || [ "$fail" ]; then
+			echo "${source} exited with code ${exitcode}, log follows:"
+			cat log
+			echo
+		fi
+		if [ "$fail" ]; then
+			exit 1
+		fi
+	} >&2
+)
+
+if [ $# -eq 1 ] && [ "$1" = "-f" ]; then
+	fail=1
+else
+	fail=''
+fi
+
+trap cleanup EXIT
+
+lockfile-create "${LOCK}"
+lockfile-touch "${LOCK}" &
+LOCKPID="$!"
+
+mkdir -p "${CACHEDIR}"
+cd "${CACHEDIR}"
+
+find -mindepth 2 -maxdepth 2 -type f -name new -delete
+
+run-parts --list "${CONFDIR}/sources/" | while read -r sourcefile; do
+	source=${sourcefile##*/}
+	mkdir -p "${source}"
+	download_source "${source}" "${sourcefile}"
+	if [ -e "${source}/new" ]; then
+		mv "${source}/new" "${source}/current"
+	fi
+	if [ -e "${source}/current" ]; then
+		if [ -e "${sourcefile}.filter" ]; then
+			if [[ ${source}/filtered -ot ${source}/current ]] || [[ ${source}/filtered -ot ${sourcefile}.filter ]]; then
+				mapfile -t filter < "${sourcefile}.filter"
+				for i in "${!filter[@]}"; do
+					if [[ ${filter[$i]} =~ ^($|#) ]]; then
+						unset filter[$i]
+					fi
+				done
+				while read -r hostlist rest; do
+					IFS=, read -ra hostarray <<<"$hostlist"
+					new_hostlist=''
+					for host in "${hostarray[@]}"; do
+						for rule in "${filter[@]}"; do
+							if [[ ${host} =~ ${rule#* } ]]; then
+								if [[ ${rule%% *} =~ ^[aopy] ]]; then
+									new_hostlist="${new_hostlist}${host},"
+								fi
+								break
+							fi
+						done
+					done
+					[ "$new_hostlist" ] || continue
+					echo "${new_hostlist%,} ${rest}"
+				done < "${source}/current" | sort -u >| "${source}/filtered.new"
+				mv "${source}/filtered.new" "${source}/filtered"
+			fi
+			cat "${source}/filtered" >&3
+		else
+			sort -u "${source}/current" >&3
+		fi
+	fi
+done 3>| "${OUTFILE}.new"
+
+if cmp -s "${OUTFILE}" "${OUTFILE}.new"; then
+	rm "${OUTFILE}.new"
+else
+	mv "${OUTFILE}.new" "${OUTFILE}"
+fi
+
+# clean up cache dirs of vanished sources
+for d in *; do
+	[ -d "$d" ] || continue
+	[ -e "${CONFDIR}/sources/$d" ] || rm -fr "$d"
+done
+
+# vim:set ft=sh:
